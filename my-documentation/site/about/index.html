@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://example.com/about/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>1. Memory management and Performance Optimisation - Python-Tips-n-Tricks</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "1. Memory management and Performance Optimisation";
+        var mkdocs_page_input_path = "about.md";
+        var mkdocs_page_url = "/about/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Python-Tips-n-Tricks
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">1. Memory management and Performance Optimisation</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#11-memory-management">1.1 Memory Management:</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#111-garbage-collection">1.1.1 Garbage Collection:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#112-memory-profiling">1.1.2 Memory Profiling:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#12-performance-optimization">1.2 Performance Optimization:</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#111-time-complexity-analysis">1.1.1 Time Complexity Analysis:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#112-profiling-for-execution-time">1.1.2 Profiling for Execution Time:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#113-cython-for-performance">1.1.3 Cython for Performance:</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../closure_and_decorator/">2. Closures and Decorators</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../context_manager/">3. Context Manager</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Python-Tips-n-Tricks</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">1. Memory management and Performance Optimisation</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="memory-management-and-performance-optimisation">Memory management and Performance Optimisation.</h1>
+<p>Let's delve deeper into memory management and performance optimization in Python.</p>
+<h2 id="11-memory-management">1.1 Memory Management:</h2>
+<h3 id="111-garbage-collection">1.1.1 Garbage Collection:</h3>
+<p>Memory management in Python involves the allocation and deallocation of memory for objects.
+Python uses a garbage collector to automatically reclaim memory from objects that are no
+longer referenced in the program. The primary mechanism is reference counting, where each object keeps track of the number of references pointing to it. When this count drops to zero, the memory occupied by the object is freed.</p>
+<p>Example:</p>
+<pre><code class="language-python"># Creating a list
+my_list = [1, 2, 3, 4, 5]
+
+# Creating another reference to the same list
+another_reference = my_list
+
+# Deleting the original reference
+del my_list
+
+# The list still exists because there is another reference
+print(another_reference)
+
+# Deleting the second reference
+del another_reference
+
+# At this point, the list is no longer referenced and will be garbage collected
+
+</code></pre>
+<h3 id="112-memory-profiling">1.1.2 Memory Profiling:</h3>
+<p>In more complex scenarios, you may want to profile memory usage to identify potential memory leaks or optimize memory-intensive sections of your code. The memory_profiler module can be used for this purpose.</p>
+<p>Example:</p>
+<pre><code class="language-python"># Example of Memory Profiling
+
+from memory_profiler import profile
+
+@profile
+def memory_intensive_function():
+    # Memory-intensive operations here
+    my_list = [0] * 10**6
+    result = sum(my_list)
+    return result
+
+memory_intensive_function()
+
+</code></pre>
+<p>By using the <code>@profile</code> decorator and running the script with a memory profiler, you can analyze the memory usage of specific functions and lines of code.</p>
+<h2 id="12-performance-optimization">1.2 Performance Optimization:</h2>
+<h3 id="111-time-complexity-analysis">1.1.1 Time Complexity Analysis:</h3>
+<p>Performance optimization involves making your code run faster or use fewer resources. Understanding the time complexity of algorithms and data structures is crucial. The Big O notation is commonly used to describe how the runtime of an algorithm scales with the size of the input.</p>
+<p>Example:</p>
+<pre><code class="language-python">#Example of Time Complexity Analysis
+
+# Inefficient way to find the maximum element in a list
+def find_max_element(lst):
+    max_element = lst[0]
+    for element in lst:
+        if element &gt; max_element:
+            max_element = element
+    return max_element
+
+# More efficient way using the built-in max function
+def optimized_find_max_element(lst):
+    return max(lst)
+
+# Analyzing time complexity
+# Both functions have O(n) time complexity, but the optimized version is more concise
+
+# ...
+
+</code></pre>
+<h3 id="112-profiling-for-execution-time">1.1.2 Profiling for Execution Time:</h3>
+<p>To identify performance bottlenecks, you can use profiling tools like cProfile or timeit to measure the execution time of different parts of your code.</p>
+<p>Example:</p>
+<pre><code class="language-python">
+# Example of Profiling for Execution Time
+
+import cProfile
+
+def time_critical_function():
+    # Time-critical operations here
+    my_list = [i for i in range(10**6)]
+    result = sum(my_list)
+    return result
+
+# Running cProfile to profile the function
+cProfile.run('time_critical_function()')
+
+</code></pre>
+<p>The output will provide insights into the time spent in each function and can help you focus on optimizing critical sections.</p>
+<h3 id="113-cython-for-performance">1.1.3 Cython for Performance:</h3>
+<p>For computationally intensive tasks, you might consider using Cython to write C extensions for Python. Cython allows you to write C-like code that gets compiled to machine code, providing performance improvements.</p>
+<p>Example:</p>
+<pre><code class="language-python"># Example of Using Cython for Performance
+
+# my_module.pyx
+def cythonized_function():
+    cdef int result = 0
+    for i in range(10**6):
+        result += i
+    return result
+
+# setup.py
+from setuptools import setup
+from Cython.Build import cythonize
+
+setup(
+    ext_modules = cythonize(&quot;my_module.pyx&quot;)
+)
+
+# ...
+
+# Profiling the Cythonized function
+# ...
+
+</code></pre>
+<p>By compiling the Cython code and importing the resulting module, you can achieve performance improvements for specific tasks.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../closure_and_decorator/" class="btn btn-neutral float-right" title="2. Closures and Decorators">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+      <span><a href="../closure_and_decorator/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

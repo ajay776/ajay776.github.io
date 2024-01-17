@@ -1,0 +1,12 @@
+# site_name: My Docs
+site_name: Python-Tips-n-Tricks
+site_url: https://example.com/
+site_author: Ajay Vishwakarma
+
+nav:
+  # - Home: index.md
+  - 1. Memory management and Performance Optimisation: about.md
+  - 2. Closures and Decorators: closure_and_decorator.md
+  - 3. Context Manager: context_manager.md
+
+theme: readthedocs
