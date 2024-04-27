@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://example.com/closure_and_decorator/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>2. Closures and Decorators - Python-Tips-n-Tricks</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "2. Closures and Decorators";
+        var mkdocs_page_input_path = "closure_and_decorator.md";
+        var mkdocs_page_url = "/closure_and_decorator/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Python-Tips-n-Tricks
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../about/">1. Memory management and Performance Optimisation</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">2. Closures and Decorators</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#21-closures">2.1 Closures:</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#211-function-inside-a-function">2.1.1 Function Inside a Function:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#212-access-to-outer-functions-variables">2.1.2 Access to Outer Function's Variables:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#213-preservation-of-state">2.1.3 Preservation of State:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#22-decorators">2.2 Decorators:</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#221-functions-as-first-class-citizens">2.2.1 Functions as First-Class Citizens:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#222-wrapper-functions">2.2.2 Wrapper Functions:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#223-syntactic-sugar">2.2.3 Syntactic Sugar:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#23-combining-closures-and-decorators">2.3 Combining Closures and Decorators:</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../context_manager/">3. Context Manager</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Python-Tips-n-Tricks</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">2. Closures and Decorators</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="closures-and-decorators">Closures and Decorators.</h1>
+<p>Let's delve deeper into memory management and performance optimization in Python.</p>
+<h2 id="21-closures">2.1 Closures:</h2>
+<p>Key Concepts:</p>
+<h3 id="211-function-inside-a-function">2.1.1 Function Inside a Function:</h3>
+<p>Closures involve having a function inside another function. The inner function is the closure.</p>
+<h3 id="212-access-to-outer-functions-variables">2.1.2 Access to Outer Function's Variables:</h3>
+<p>The inner function has access to the variables of the outer (enclosing) function, even after the outer function has completed execution.</p>
+<h3 id="213-preservation-of-state">2.1.3 Preservation of State:</h3>
+<p>Closures allow functions to "remember" the values of variables in the outer function's scope.</p>
+<p>Example:</p>
+<pre><code class="language-python">def outer_function(x):
+    def inner_function(y):
+        return x + y
+    return inner_function
+
+closure_example = outer_function(10)
+result = closure_example(5)  # Output: 15
+
+</code></pre>
+<p>Here, <code>inner_function</code> is a closure that remembers the value of x from the <code>outer_function</code>.</p>
+<h2 id="22-decorators">2.2 Decorators:</h2>
+<p>A decorator is a higher-order function that takes a function and extends or modifies its behavior. It allows you to wrap another function, adding some functionality before or after the original function
+Key Concepts:</p>
+<h3 id="221-functions-as-first-class-citizens">2.2.1 Functions as First-Class Citizens:</h3>
+<p>In Python, functions are first-class citizens, meaning they can be passed as arguments to other functions.</p>
+<h3 id="222-wrapper-functions">2.2.2 Wrapper Functions:</h3>
+<p>Decorators use wrapper functions to modify the behavior of the original function.</p>
+<h3 id="223-syntactic-sugar">2.2.3 Syntactic Sugar:</h3>
+<p>Python provides a convenient syntax using the <code>@decorator</code> syntax to apply decorators to functions.</p>
+<p>Example:</p>
+<pre><code class="language-python">def my_decorator(func):
+    def wrapper():
+        print(&quot;Something is happening before the function is called.&quot;)
+        func()
+        print(&quot;Something is happening after the function is called.&quot;)
+    return wrapper
+
+@my_decorator
+def say_hello():
+    print(&quot;Hello!&quot;)
+
+say_hello()
+
+</code></pre>
+<p>Output:</p>
+<pre><code class="language-shell">Something is happening before the function is called.
+Hello!
+Something is happening after the function is called.
+
+</code></pre>
+<p>In this example, <code>my_decorator</code> is a decorator that wraps the <code>say_hello</code> function, adding behavior before and after its execution.</p>
+<h2 id="23-combining-closures-and-decorators">2.3 Combining Closures and Decorators:</h2>
+<p>You can combine closures and decorators for more flexible and reusable code. Closures can be used within decorators to capture and maintain additional state.</p>
+<p>Example:</p>
+<pre><code class="language-python">def multiplier(factor):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            result = func(*args, **kwargs)
+            return result * factor
+        return wrapper
+    return decorator
+
+@multiplier(2)
+def square(x):
+    return x * x
+
+@multiplier(3)
+def cube(x):
+    return x * x * x
+
+print(square(4))  # Output: 32
+print(cube(3))    # Output: 27
+
+</code></pre>
+<p>Here, <code>multiplier</code> is a closure-based decorator. It takes a <code>factor</code> as an argument and returns a decorator. The returned decorator (<code>wrapper</code>) multiplies the result of the original function by the specified factor. Applying <code>@multiplier(2)</code> and <code>@multiplier(3)</code> to <code>square</code> and <code>cube</code> functions demonstrates the flexibility of closures and decorators in creating reusable and adaptable code.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../about/" class="btn btn-neutral float-left" title="1. Memory management and Performance Optimisation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../context_manager/" class="btn btn-neutral float-right" title="3. Context Manager">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../about/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../context_manager/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
